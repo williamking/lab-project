@@ -10,7 +10,6 @@ Meeting::Meeting(std::string sponsor, std::string participator,
          startDate_ = startTime;
          endDate_ = endTime;
          title_ = title;
-         if (endDate_ < startDate_) throw("Invalid Date!");
 }
 
 std::string Meeting::getSponsor(void) const {

@@ -12,7 +12,6 @@ Storage* Storage::instance_ = 0;
 
 Storage::Storage() {
   readFromFile("Agenda.data");
-  cout << meetingList_.size() << endl;
 }
 
 void Storage::createUser(const User& newUser) {
@@ -127,9 +126,8 @@ bool Storage::writeToFile(const char *fpath) {
   size = meetingList_.size();
   out << "{collection:\"Meeting\",total:" << size << '}' << endl;
   list<Meeting>::iterator iter2;
-  cout << meetingList_.empty() << endl;
   for (iter2 = meetingList_.begin(); iter2 != meetingList_.end(); ++iter2) {
-    cout << "{sponsor:" << '\"' << iter2->getSponsor() << 
+    out << "{sponsor:" << '\"' << iter2->getSponsor() << 
     "\",participator:\"" << iter2->getParticipator() << "\",sdate:\"" << Date::dateToString(iter2->getStartDate()) << "\",edate:\"" << Date::dateToString(iter2->getEndDate()) << "\",title:\""
 << iter2->getTitle() << "\"}" << endl;
   }
