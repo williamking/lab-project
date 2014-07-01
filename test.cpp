@@ -1,16 +1,25 @@
 #include "Meeting.h"
 #include "Date.h"
+#include "Storage.h"
+#include "User.h"
 #include <iostream>
 #include <string>
+#include <functional>
 
 using namespace std;
 
+bool check(const User& user) {
+  return (user.getName() == "Li");
+}
+
 int main() {
-  string sp = "william", par = "naruto", title = "fight!";
-  Date st = Date::stringToDate("2006-05-14/18:00"), end = Date::stringToDate("2014-05-30/14:35");
-  Meeting test(sp, par, st, end, title);
-  cout << test.getParticipator() << endl;
-  cout << test.getSponsor() << endl;
-  cout << test.getStartDate().getDay() << endl;
+  Storage *st = Storage::getInstance();
+  string file1 = "in.txt", file2 = "out.txt";
+  User li;
+  st->createUser(li);
+  list<User> p = st->queryUser(check);
+  for (list<User>::iterator iter = p.begin(); iter != p.end(); ++iter) {
+    cout << iter->getName() << endl;
+  }
   return 0;
 }

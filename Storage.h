@@ -27,7 +27,7 @@ class Storage {
   public:
     // singleton
     static Storage *getInstance(void);
-    ~Storage();s
+    ~Storage();
     // CRUD for User & Meeting
     // using C++11 Function Template and Lambda Expressions
     void createUser(const User&);

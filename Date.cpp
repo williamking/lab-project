@@ -1,6 +1,7 @@
 #include "Date.h"
 #include <string>
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -115,6 +116,7 @@ Date & Date::operator=(const Date& date) {
   day_ = date.day_;
   hour_ = date.hour_;
   minute_ = date.minute_;
+  return *this;
 }
 
 bool Date::operator==(const Date& date) const {
