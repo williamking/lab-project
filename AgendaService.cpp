@@ -39,6 +39,7 @@ bool AgendaService::deleteUser(string userName, string password) {
     if ((user.getName() == userName) && (user.getPassword() == password)) return true;
   };
   int num = storage_->deleteUser(filter);
+  deleteAllMeetings(userName);
   if (num != 0) return true;
   else return false;
 }

@@ -31,4 +31,5 @@ int main() {
   if (agenda.createMeeting("William", "Love", "Smartmoon", "2014-11-99/08:40", "2014-11-02/24:00")) cout << "Create successfully!" << endl;
   else cout << "Invalid Time" << endl;
   agenda.quitAgenda();
+  return 0;
 }

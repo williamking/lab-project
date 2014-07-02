@@ -1,5 +1,5 @@
 All: test.cpp Date.o Meeting.o User.o Storage.o AgendaService.o
-	g++ -std=c++11 -o All test.cpp Meeting.o Storage.o AgendaService.o User.o Date.o
+	g++ -std=c++11 -o All -g test.cpp Meeting.o Storage.o AgendaService.o User.o Date.o
 AgendaService.o: AgendaService.h AgendaService.cpp
 	g++ -std=c++11 -c -g AgendaService.cpp
 Date.o: Date.h Date.cpp
