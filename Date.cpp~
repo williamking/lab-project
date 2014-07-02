@@ -3,11 +3,7 @@
 #include <sstream>
 #include <iostream>
 
-using std::cin;
-using std::cout;
-using std::endl;
-using std::string;
-using std::stringstream;
+using namespace std;
 
 Date::Date() {}
 Date::Date(int y, int m, int d, int h, int mi) {
