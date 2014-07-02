@@ -31,9 +31,20 @@ void Storage::createMeeting(const Meeting& newMeeting) {
 
 bool Storage::readFromFile(const char *fpath) {
   fstream in(fpath);
+  if (!in) return false;
+  if (in.peek() == EOF) {
+    in.close();
+    return true;
+  }
   string reader;
   getline(in, reader);
-  int num = reader[reader.size() - 2] - '0';
+  int index = reader.size() - 2;
+  int num = 0, ten = 1;
+  while ((reader[index] >= '0') && (reader[index] <= '9')) { 
+    num = num + (reader[index] - '0') * ten;
+    ten *= 10;
+    index--;
+  }
   for (int i = 0; i < num; ++i) {
     getline(in, reader);
     int s = 0;
@@ -70,7 +81,13 @@ bool Storage::readFromFile(const char *fpath) {
     createUser(User(name, password, email, phone));
   }
   getline(in, reader);
-  num = reader[reader.size() - 2] - '0';
+  index = reader.size() - 2;
+  num = 0, ten = 1;
+  while ((reader[index] >= '0') && (reader[index] <= '9')) {
+    num = num + (reader[index] - '0') * ten;
+    ten *= 10;
+    index--;
+  }
   for (int i = 0; i < num; ++i) {
     int s = 0;
     getline(in, reader);
@@ -148,7 +165,8 @@ Storage* Storage::getInstance(void) {
 }
 
 Storage::~Storage() {
-  delete instance_;
+  sync();
+  instance_ = 0;
 }
 
 list<User> Storage::queryUser(function<bool(const User&)> filter) {
@@ -174,13 +192,12 @@ int Storage::updateUser(function<bool(const User&)> filter, function<void(User&)
 int Storage::deleteUser(function<bool(const User&)> filter) {
   list<User>::iterator iter = userList_.begin();
   int num = 0;
-  for (; iter != userList_.end(); ++iter) {
+  for (; iter != userList_.end();) {
     if (filter(*iter)) {
-      list<User>::iterator next = iter;
-      ++next;
-      userList_.erase(iter);
-      iter = next;
+      iter = userList_.erase(iter);
       ++num;
+    } else {
+      ++iter;
     }
   }
   return num;

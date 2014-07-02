@@ -25,7 +25,7 @@ bool AgendaService::userLogIn(string userName, string password) {
 
 bool AgendaService::userRegister(string userName, string password, string email, string phone) {
   function<bool(const User&)> filter = [userName](const User &user) {
-    if (user.getName() == userName) return true;
+    if (user.getName() == userName) return false;
   };
   list<User> find = storage_->queryUser(filter);
   if (find.size() != 0) return false;

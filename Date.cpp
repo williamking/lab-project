@@ -69,8 +69,8 @@ bool Date::isValid(Date date) {
   if (date.year_ % 4 != 0) {
     if ((date.day_ < 0) || (date.day_ > monthDay[date.month_ - 1])) return false;
   }
-  if ((date.hour_ < 0) || (date.hour_ > 24)) return false;
-  if ((date.minute_ < 0) || (date.minute_ > 60)) return false;
+  if ((date.hour_ < 0) || (date.hour_ > 23)) return false;
+  if ((date.minute_ < 0) || (date.minute_ > 59)) return false;
   return true;
 }
 

@@ -18,7 +18,7 @@ int main() {
   cin >> userName;
   cout << "password:" << endl;
   cin >> password;
-  if (agenda.userLogin(userName, password)) cout << "Login sucessfully!" << endl;
+  if (agenda.userLogIn(userName, password)) cout << "Login sucessfully!" << endl;
   if (agenda.deleteUser(userName, password)) cout << "Logout successfully!" << endl;
   if (agenda.createMeeting("William", "Love", "Smartmoon", "2014-11-02/08:40", "2014-11-02/24:00")) cout << "Create successfully!" << endl;
   else cout << "??" << endl;
