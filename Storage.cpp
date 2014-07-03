@@ -18,7 +18,7 @@ using std::string;
 Storage* Storage::instance_ = 0;
 
 Storage::Storage() {
-  readFromFile("Agenda.data");
+  readFromFile("agenda.data");
 }
 
 void Storage::createUser(const User& newUser) {
@@ -135,7 +135,10 @@ bool Storage::readFromFile(const char *fpath) {
 
 bool Storage::writeToFile(const char *fpath) {
   FILE *fp;
-  if ((fp = fopen(fpath, "w")) == NULL) return false;
+  if ((fp = fopen(fpath, "w")) == NULL) {
+    fclose(fp);
+    return false;
+  }
   fclose(fp);
   fstream out(fpath);
   if (!out) return false;
@@ -236,6 +239,6 @@ int Storage::deleteMeeting(function<bool(const Meeting&)> filter) {
 }
 
 bool Storage::sync(void) {
-  return writeToFile("Agenda.data");
+  return writeToFile("agenda.data");
 }
 

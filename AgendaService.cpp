@@ -83,12 +83,25 @@ bool AgendaService::createMeeting(string userName, string title, string particip
     else return false;
   };
   if (storage_->queryMeeting(filter3).size() != 0) return false;
-  function<bool(const Meeting&)> filterx = [userName,title](const Meeting &meeting) {
+  cout << "5" << endl;
+  function<bool(const Meeting&)> filterx = [participator,title](const Meeting &meeting) {
     if ((meeting.getSponsor() == participator) && (meeting.getTitle() == title)) return true;
     else return false;
   };
   if (storage_->queryMeeting(filterx).size() != 0) return false;
-  cout << "5" << endl;
+  cout << "x" << endl;
+  function<bool(const Meeting&)> filterx1 = [userName,title](const Meeting &meeting) {
+    if ((meeting.getParticipator() == userName) && (meeting.getTitle() == title)) return true;
+    else return false;
+  };
+  if (storage_->queryMeeting(filterx1).size() != 0) return false;
+  cout << "x1" << endl;
+  function<bool(const Meeting&)> filterx2 = [participator,title](const Meeting &meeting) {
+    if ((meeting.getParticipator() == participator) && (meeting.getTitle() == title)) return true;
+    else return false;
+  };
+  if (storage_->queryMeeting(filterx2).size() != 0) return false;
+  cout << "x2" << endl;
   //check if the meeting title is unique
   function<bool(const Meeting&)> filter4 = [userName](const Meeting &meeting) {
     if (meeting.getSponsor() == userName) return true;
@@ -98,6 +111,7 @@ bool AgendaService::createMeeting(string userName, string title, string particip
   for (list<Meeting>::iterator iter = checker.begin(); iter != checker.end(); ++iter) {
     if ((newMeeting.getStartDate() >= iter->getStartDate()) && (newMeeting.getStartDate() < iter->getEndDate())) return false;
     if ((newMeeting.getEndDate() > iter->getStartDate()) && (newMeeting.getEndDate() <= iter->getEndDate())) return false;
+    if ((newMeeting.getStartDate() < iter->getStartDate()) && (newMeeting.getEndDate() > iter->getEndDate())) return false;
   }
   cout << "6" << endl;
   function<bool(const Meeting&)> filter5 = [userName](const Meeting &meeting) {
@@ -108,6 +122,7 @@ bool AgendaService::createMeeting(string userName, string title, string particip
   for (list<Meeting>::iterator iter = checker.begin(); iter != checker.end(); ++iter) {
     if ((newMeeting.getStartDate() >= iter->getStartDate()) && (newMeeting.getStartDate() < iter->getEndDate())) return false;
     if ((newMeeting.getEndDate() > iter->getStartDate()) && (newMeeting.getEndDate() <= iter->getEndDate())) return false;
+    if ((newMeeting.getStartDate() < iter->getStartDate()) && (newMeeting.getEndDate() > iter->getEndDate())) return false;
   }
   cout << "7" << endl;
   function<bool(const Meeting&)> filter6 = [participator](const Meeting &meeting) {
@@ -118,6 +133,7 @@ bool AgendaService::createMeeting(string userName, string title, string particip
   for (list<Meeting>::iterator iter = checker.begin(); iter != checker.end(); ++iter) {
     if ((newMeeting.getStartDate() >= iter->getStartDate()) && (newMeeting.getStartDate() < iter->getEndDate())) return false;
     if ((newMeeting.getEndDate() > iter->getStartDate()) && (newMeeting.getEndDate() <= iter->getEndDate())) return false;
+    if ((newMeeting.getStartDate() < iter->getStartDate()) && (newMeeting.getEndDate() > iter->getEndDate())) return false;
   }
   cout << "8" << endl;
   function<bool(const Meeting&)> filter7 = [participator](const Meeting &meeting) {
@@ -128,6 +144,7 @@ bool AgendaService::createMeeting(string userName, string title, string particip
   for (list<Meeting>::iterator iter = checker.begin(); iter != checker.end(); ++iter) {
     if ((newMeeting.getStartDate() >= iter->getStartDate()) && (newMeeting.getStartDate() < iter->getEndDate())) return false;
     if ((newMeeting.getEndDate() > iter->getStartDate()) && (newMeeting.getEndDate() <= iter->getEndDate())) return false;
+    if ((newMeeting.getStartDate() < iter->getStartDate()) && (newMeeting.getEndDate() > iter->getEndDate())) return false;
   }
   cout << "9" << endl;
   //check if the user and the participator have time
@@ -147,8 +164,15 @@ list<Meeting> AgendaService::meetingQuery(string userName, string title) {
 list<Meeting> AgendaService::meetingQuery(string userName, string startDate, string endDate) {
   Date sDate = Date::stringToDate(startDate), eDate = Date::stringToDate(endDate);
   function<bool(const Meeting&)> filter = [userName, sDate, eDate](const Meeting &meeting) {
+    cout << "pp " << Date::dateToString(sDate) <<  ' ' << Date::dateToString(eDate) << endl;
+    cout << "ps " << Date::dateToString(meeting.getStartDate()) << ' ' << Date::dateToString(meeting.getEndDate()) << endl;
+    cout << "pl" << meeting.getSponsor() << ' ' << meeting.getParticipator() << endl;
     if (((meeting.getSponsor() == userName) || (meeting.getParticipator() == userName))
     && (meeting.getStartDate() >= sDate) && (meeting.getEndDate() <= eDate)) return true;
+    if (((meeting.getSponsor() == userName) || (meeting.getParticipator() == userName))
+    && (sDate >= meeting.getStartDate()) && (sDate < meeting.getEndDate())) return true;
+    if (((meeting.getSponsor() == userName) || (meeting.getParticipator() == userName))
+    && (eDate > meeting.getStartDate()) && (eDate <= meeting.getEndDate())) return true;
     else return false;
   };
   return storage_->queryMeeting(filter);

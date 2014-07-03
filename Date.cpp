@@ -64,10 +64,10 @@ bool Date::isValid(Date date) {
   if ((date.year_ < 1000) || (date.year_ > 9999)) return false;
   if ((date.month_ < 1) || (date.month_ > 12)) return false;
   if (((date.year_ % 4 == 0) && (date.year_ % 100 != 0)) || (date.year_ % 400 == 0)) {
-    if ((date.day_ < 0) || (date.day_ > monthDayForLeap[date.month_ - 1])) return false;
+    if ((date.day_ < 1) || (date.day_ > monthDayForLeap[date.month_ - 1])) return false;
   }
-  if (date.year_ % 4 != 0) {
-    if ((date.day_ < 0) || (date.day_ > monthDay[date.month_ - 1])) return false;
+  if ((date.year_ % 4 != 0) || ((date.year_ % 100 == 0) && (date.year_ % 400 != 0))) {
+    if ((date.day_ < 1) || (date.day_ > monthDay[date.month_ - 1])) return false;
   }
   if ((date.hour_ < 0) || (date.hour_ > 23)) return false;
   if ((date.minute_ < 0) || (date.minute_ > 59)) return false;
@@ -136,7 +136,7 @@ bool Date::operator>(const Date& date) const {
   if (year_ > date.year_) return true;
   if (year_ < date.year_) return false;
   if (month_ > date.month_) return true;
-  if (month_ > date.month_) return false;
+  if (month_ < date.month_) return false;
   if (day_ > date.day_) return true;
   if (day_ < date.day_) return false;
   if (hour_ > date.hour_) return true;

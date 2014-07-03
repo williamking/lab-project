@@ -1,6 +1,10 @@
-{collection:"User", total:2}
-{name:"William",password:"17881243",email:"williamjwking@gmail.com",phone:"8130770"}
-{name:"Smartmoon",password:"love",email:"asdas",phone:"1243"}
-{collection:"Meeting",total:2}
-{sponsor:"William",participator:"Smartmoon",sdate:"2014-11-02/08:40",edate:"2014-11-02/23:00",title:"Love"}
-{sponsor:"William",participator:"Smartmoon",sdate:"2014-11-02/08:40",edate:"2014-11-02/23:00",title:"Love1"}
+{collection:"User", total:7}
+{name:"Luffy",password:"123",email:"Luffy@163.com",phone:"112"}
+{name:"Zoro",password:"123",email:"Zoro@163.com",phone:"112"}
+{name:"Chopper",password:"123",email:"Chopper@163.com",phone:"112"}
+{name:"wc3",password:"12345",email:"wc@qq.com",phone:"123456"}
+{name:"wc4",password:"12345",email:"wc@qq.com",phone:"123456"}
+{name:"wc5",password:"12345",email:"wc@qq.com",phone:"123456"}
+{name:"wc6",password:"12345",email:"wc@qq.com",phone:"123456"}
+{collection:"Meeting",total:1}
+{sponsor:"wc5",participator:"wc6",sdate:"2012-12-13/12:12",edate:"2012-12-14/12:12",title:"today8"}
