@@ -9,7 +9,7 @@ using std::cout;
 using std::endl;
 using std::left;
 
-int out = 1;
+int out = 0;
 
 AgendaUI::AegndaUI() {
   userName_ = "";
@@ -119,7 +119,7 @@ void AgendaUI::userRegister(void) {
 }
 
 void AgendaUI::quitAgenda(void) {
-  out = 0;
+  out = 1;
 }
 
 void AgendaUI::userLogout(void) {

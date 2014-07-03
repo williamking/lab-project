@@ -134,19 +134,29 @@ bool Date::operator==(const Date& date) const {
 
 bool Date::operator>(const Date& date) const {
   if (year_ > date.year_) return true;
+  if (year_ < date.year_) return false;
   if (month_ > date.month_) return true;
+  if (month_ > date.month_) return false;
   if (day_ > date.day_) return true;
+  if (day_ < date.day_) return false;
   if (hour_ > date.hour_) return true;
+  if (hour_ < date.hour_) return false;
   if (minute_ > date.minute_) return true;
+  if (minute_ < date.minute_) return false;
   return false;
 }
 
 bool Date::operator<(const Date& date) const {
   if (year_ < date.year_) return true;
+  if (year_ > date.year_) return false;
   if (month_ < date.month_) return true;
+  if (month_ > date.month_) return false;
   if (day_ < date.day_) return true;
+  if (day_ > date.day_) return false;
   if (hour_ < date.hour_) return true;
+  if (hour_ > date.hour_) return false;
   if (minute_ < date.minute_) return true;
+  if (minute_ > date.minute_) return false;
   return false;
 }
   
