@@ -55,11 +55,36 @@ list<User> AgendaService::listAllUsers(void) {
 }
 
 bool AgendaService::createMeeting(string userName, string title, string participator, string startDate, string endDate) {
+  bool check = true;
+  if (startDate.size() != 16) return false;
+  for (int i = 0; i < startDate.size() ;++i) {
+    switch (i) {
+      case 4: if (startDate[i] != '-') check = false; break;
+      case 7: if (startDate[i] != '-') check = false; break;
+      case 10: if (startDate[i] != '/') check = false; break;
+      case 13: if (startDate[i] != ':') check = false; break;
+      default: if ((startDate[i] < '0') || (startDate[i] > '9')) check = false; break;
+    }
+  }
+  if (endDate.size() != 16) return false;
+  for (int i = 0; i < endDate.size() ;++i) {
+    switch (i) {
+      case 4: if (endDate[i] != '-') check = false; break;
+      case 7: if (endDate[i] != '-') check = false; break;
+      case 10: if (endDate[i] != '/') check = false; break;
+      case 13: if (endDate[i] != ':') check = false; break;
+      default: if ((endDate[i] < '0') || (endDate[i] > '9')) check = false; break;
+    }
+  }
+  if (!check) return false;
+  //check if time-string is valid
   Date sDate = Date::stringToDate(startDate), eDate = Date::stringToDate(endDate);
   Meeting newMeeting(userName, participator, sDate, eDate, title);
   if ((Date::isValid(newMeeting.getStartDate()) == 0) || (Date::isValid(newMeeting.getEndDate()) == 0)) return false;
   if (newMeeting.getStartDate() >= newMeeting.getEndDate()) return false;
   //check if time is valid
+  if (userName == participator) return false;
+  //check if the sponsor and participator is the same
   function<bool(const User&)> filter1 = [userName](const User &user) {
     if (user.getName() == userName) return true;
     return false;

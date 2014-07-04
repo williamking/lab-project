@@ -1,0 +1,5 @@
+{collection:"User", total:3}
+{name:"William",password:"17881243",email:"asd",phone:"asd"}
+{name:"a",password:"a",email:"a",phone:"a"}
+{name:"b",password:"b",email:"33@mmail.com",phone:"8130343"}
+{collection:"Meeting",total:0}
