@@ -2,6 +2,8 @@
 #include "AgendaUI.h"
 #include <iostream>
 #include <iomanip>
+#include <cstring>
+#include <stringstream>
 
 using std::string;
 using std::list;
@@ -11,6 +13,7 @@ using std::endl;
 using std::left;
 using std::setw;
 using std::left;
+using std::stringtream;
 
 #define TARGET "17.17.0.25"
 
@@ -54,31 +57,35 @@ void AgendaUI::OperationLoop(char *hostname) {
     if (userName_ == "") {
       send(client, "----------------------- Agenda-------------------------------\n", MAXDATASIZE, 0);
       send("Action :\n", MAXDATASIZE, 0);
-      cout << "l   - log in Agenda by user name and pass word" << endl;
-      cout << "r   - register and Agenda account" << endl;
-      cout << "q   - quit Agenda" << endl;
-      cout << "-------------------------------------------------------------" << endl;
-      cout << endl << endl;
-      cout << "Agenda : ~$ ";
+      send("l   - log in Agenda by user name and pass word\n", MAXDATASIZE, 0);
+      send("r   - register and Agenda account\n",MAXDATASIZE, 0);
+      send("q   - quit Agenda\n", MAXDATASIZE, 0);
+      send("-------------------------------------------------------------\n\n",
+      MAXDATASIZE, 0);
+      send("Agenda : ~$ ", MAXDATASIZE, 0);
       string op = getOperation();
       executeOperation(op);
     }
     if (userName_ != "") {
-      cout << "----------------------- Agenda-------------------------------" << endl;
-      cout << "Action :" << endl;
-      cout << "o   - log out Agenda" << endl;
-      cout << "dc  - delete Agenda account" << endl;
-      cout << "lu  - list all Agenda user" << endl;
-      cout << "cm  - create a meeeting" << endl;
-      cout << "la  - list all meetings" << endl;
-      cout << "las - list all sponsor meetings" << endl;
-      cout << "lap - list all participate meetings" << endl;
-      cout << "qm  - query meeting by title" << endl;
-      cout << "qt  - query meeting by time interval" << endl;
-      cout << "dm  - delete meeting by title" << endl;
-      cout << "da  - delete all meetings" << endl;
-      cout << "-------------------------------------------------------------" << endl;
-      cout << "Agenda@" << userName_ << " : # ";
+      send("----------------------- Agenda-------------------------------\n
+Action :\n
+o   - log out Agenda\n
+dc  - delete Agenda account\n
+lu  - list all Agenda user\n
+cm  - create a meeeting\n
+la  - list all meetings\n
+las - list all sponsor meetings\n
+lap - list all participate meetings\n
+qm  - query meeting by title\n
+qt  - query meeting by time interval\n
+dm  - delete meeting by title\n
+da  - delete all meetings\n
+-------------------------------------------------------------\n",
+      MAXDATASIZE, 0);
+      string s = "Agenda@";
+      s += userName_ + " : # ";
+      send(s.to_str(), MAXDATASIZE, 0);
+      "Action :" << endl;
       string op = getOperation();
       executeOperation(op);
     }
@@ -90,7 +97,14 @@ void AgendaUI::startAgenda(void) {
 
 string AgendaUI::getOperation() {
   string word;
-  cin >> word;
+  char buf[MAXDATASIZE];
+  if ((recv(sockfd, buf, MAXDATASIZE, 0)) == -1) {
+    perror("receive fail!");
+    close(sockfd);
+    exit(1);
+  }
+  buf[strlen(buf)] = '\0';
+  word = buf;
   return word;
 }
 
@@ -100,7 +114,7 @@ bool AgendaUI::executeOperation(string op) {
     if (op == string("l")) { userLogIn(); k = true; } else
     if (op == string("r")) { userRegister(); k = true; } else
     if (op == string("q")) { quitAgenda(); k = true; } else
-    cout << "Invalid Command!" << endl; k = false;
+    send("Invalid Command!\n",MAXDATASIZE, 0); k = false;
  } else {
      if (op == string("o")) { userLogOut(); k = true; } else
      if (op == string("dc")) { deleteUser(); k = true; } else 
@@ -113,7 +127,7 @@ bool AgendaUI::executeOperation(string op) {
      if (op == string("qt")) { queryMeetingByTimeInterval(); k = true; } else 
      if (op == string("dm")) { deleteMeetingByTitle(); k = true; } else
      if (op == string("da")) { deleteAllMeetings(); k = true; } else
-       cout << "Invalid Command!" << endl; k = false;}
+       send("Invalid Command!\n", MAXDATASIZE, 0); k = false;
      return k;
 }
 
@@ -121,30 +135,40 @@ void AgendaUI::userLogIn(void) {
   string uName, pWord, str = "1";
   cout << "[log in] [user name] [password]" << endl;
   cout << "[log in] ";
-  cin  >> uName >> pWord;
-  str = str + ' ' + uName + ' ' + pword;
-  if (send(server, str.to_str(), MAXDATESIZE, 0) == -1) {
-    perror("send fail!");
-    close(server);
-    exit(0);
+  char buf[MAXDATASIZE];
+  if ((recv(sockfd, buf, MAXDATASIZE, 0)) == -1) {
+    perror("receive fail!");
+    close(sockfd);
+    exit(1);
   }
+  buf[strlen(buf)] = '\0';
+  string str = buf;
+  uName = buf;
+  pWord = buf;
   if (agendaService_.userLogIn(uName, pWord)) {
-    cout << "[log in] succeed!" << endl;
+    send("[log in] succeed!\n", MAXDATASIZE, 0);
     userName_ = uName;
     userPassword_ = pWord;
   }
-  else cout << "[error] log in fail!" << endl;
+  else send(client_fd, "[error] log in fail!\n", MAXDATASIZE, 0);
 }
 
 void AgendaUI::userRegister(void) {
   string name, key, email, phone;
-  cout << "[register] [user name] [password] [email] [phone]" << endl;
-  cout << "[register] ";
+  send(client_fd, "[register] [user name] [password] [email] [phone]\n
+[register] ", MAXDATASIZE, 0);
+  if ((recv(sockfd, buf, MAXDATASIZE, 0)) == -1) {
+    perror("receive fail!");
+    close(sockfd);
+    exit(1);
+  }
+  buf[strlen(buf)] = '\0';
+  string str = buf;
   cin >> name >> key >> email >> phone;
   if (agendaService_.userRegister(name, key, email, phone)) {
-    cout << "[register] succeed!" << endl;
+    send("[register] succeed!\n", MAXDATASIZE, 0);
   } else {
-    cout << "[error] register fail!" << endl;
+    send(client_fd, "[error] register fail!\n", MAXDATASIZE, 0);
   }
 }
 
@@ -159,15 +183,15 @@ void AgendaUI::userLogOut(void) {
 
 void AgendaUI::deleteUser(void) {
   if (agendaService_.deleteUser(userName_, userPassword_)) {
-    cout << "[delete agenda account] succeed!" << endl;
+    send(client_fd, "[delete agenda account] succeed!\n", MAXDATASIZE, 0);
     userLogOut();
   } else {
-    cout << "[delete agenda account] fail!" << endl;
+    send(client_fd, "[delete agenda account] fail!\n", MAXDATASIZE, 0);
   }
 }
 
 void AgendaUI::listAllUsers(void) {
-  cout << "[list all users]" << endl << endl;
+  send(client_fd, "[list all users]\n\n", MAXDATASIZE, 0);
   list<User> all = agendaService_.listAllUsers();
   int lName = 4, lEmail = 4, lPhone = 5;
   for (list<User>::iterator iter = all.begin(); iter != all.end(); ++iter) {
@@ -175,11 +199,20 @@ void AgendaUI::listAllUsers(void) {
     if (iter->getEmail().size() > lEmail) lEmail = iter->getEmail().size();
     if (iter->getPhone().size() > lPhone) lPhone = iter->getPhone().size();
   }
-  cout << left;
-  cout << setw(lName) << "name" << "  " << setw(lEmail) << "email" << "  " << setw(lPhone) << "phone" << endl;
-  cout << left;
+  stringstream ss;
+  ss << left;
+  ss << setw(lName) << "name" << "  " << setw(lEmail) << "email" << "  " << setw(lPhone) << "phone";
+  string str;
+  getline(ss, str);
+  str += '\n';
+  send(client_fd, str.to_str(), MAXDATASIZE, 0);
   for (list<User>::iterator iter = all.begin(); iter != all.end(); ++iter) {
-    cout << setw(lName) << iter->getName() << "  " << setw(lEmail) << iter->getEmail() << "  " << setw(lPhone) << iter->getPhone() << endl;
+    ss.clean();
+    ss << left;
+    ss << setw(lName) << iter->getName() << "  " << setw(lEmail) << iter->getEmail() << "  " << setw(lPhone) << iter->getPhone();
+    getline(ss, str);
+    str += '\n';
+    send(client_fd, str.to_str(), MAXDATASIZE, 0);
   }
 }
 
