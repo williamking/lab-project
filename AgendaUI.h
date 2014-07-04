@@ -4,11 +4,24 @@
 #include "AgendaService.h"
 #include <iostream>
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/wait.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+
+#define SERVERPORT 8888
+#define MAXDATASIZE 100
 
 class AgendaUI {
  public:
   AgendaUI();
-  void OperationLoop(void);
+  void OperationLoop(char *hostname);
 
  private:
   // task functions
@@ -34,6 +47,10 @@ class AgendaUI {
   std::string userName_;
   std::string userPassword_;
   AgendaService agendaService_;
+  int sockfd, client_fd;
+  char buf[MAXDATESIZE];
+  struct sockaddr_in my_addr;
+  struct sockaddr_in remote_addr;
 };
 
 #endif

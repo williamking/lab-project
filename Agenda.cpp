@@ -2,7 +2,8 @@
 
 AgendaUI aui;
 
-int main() {
-  aui.OperationLoop();
+int main(argc, argv[]) {
+  char *name = argv[2];
+  aui.OperationLoop(name);
   return 0;
 }

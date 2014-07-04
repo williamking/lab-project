@@ -12,18 +12,48 @@ using std::left;
 using std::setw;
 using std::left;
 
+#define TARGET "17.17.0.25"
+
 int out = 1;
 
 AgendaUI::AgendaUI() {
   userName_ = "";
   userPassword_ = "";
+  if ((host = gethostbyname(TARGET)) == NULL) {
+    herror("gethostbyname fail!");
+    exit(1);
+  }
+  if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    perror("create socket fail!");
+    exit(1);
+  }
+  if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    perror("socket create fail!");
+    exit(1);
+  }
+  my_addr.sin_family = AF_INET;
+  my_addr.sin_port = htons(SERVERPORT);
+  my_addr.sin_addr.s_addr = INADDR_ANY;
+  bzero(&(my_addr.sin_zero), 8);
+  if (bind(sockfd, (struct sockaddr *)& my_addr, sizeof(struct sockaddr)) == -1) {
+  perror("bind error!");
+  exit(1);
+  }
+  if (listen(sockfd, BACKLOG) == -1) {
+    perror("listen error!");
+    exit(1);
+  }
 }
 
-void AgendaUI::OperationLoop(void) {
+void AgendaUI::OperationLoop(char *hostname) {
   do {
+    if ((client_fd = accept(sockfd, (struct sockaddr*)&remote_addr, &sin_size)) == -1) {
+      perror("accept error");
+      continue;
+    }
     if (userName_ == "") {
-      cout << "----------------------- Agenda-------------------------------" << endl;
-      cout << "Action :" << endl;
+      send(client, "----------------------- Agenda-------------------------------\n", MAXDATASIZE, 0);
+      send("Action :\n", MAXDATASIZE, 0);
       cout << "l   - log in Agenda by user name and pass word" << endl;
       cout << "r   - register and Agenda account" << endl;
       cout << "q   - quit Agenda" << endl;
@@ -88,10 +118,16 @@ bool AgendaUI::executeOperation(string op) {
 }
 
 void AgendaUI::userLogIn(void) {
-  string uName, pWord;
+  string uName, pWord, str = "1";
   cout << "[log in] [user name] [password]" << endl;
   cout << "[log in] ";
   cin  >> uName >> pWord;
+  str = str + ' ' + uName + ' ' + pword;
+  if (send(server, str.to_str(), MAXDATESIZE, 0) == -1) {
+    perror("send fail!");
+    close(server);
+    exit(0);
+  }
   if (agendaService_.userLogIn(uName, pWord)) {
     cout << "[log in] succeed!" << endl;
     userName_ = uName;

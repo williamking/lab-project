@@ -12,7 +12,7 @@
 #define SERVERPORT 8888 /*number of server terminal*/
 #define BACKLOG 100 /*max number of connected clients*/
 
-main() {
+int main() {
   int sockfd, client_fd; /*socket: listen to socket, client_fd: data transport socket*/
   struct sockaddr_in my_addr; /*inforation of the server address*/
   struct sockaddr_in remote_addr; /*information of the client address*/
