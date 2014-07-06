@@ -77,11 +77,12 @@ bool Date::isValid(Date date) {
 Date Date::stringToDate(std::string dateString) {
   string strYear, strHour, strMinute, strMonth, strDay;
   int year, hour, day, month, minute;
-  strYear = dateString.substr(0, 4);
-  strMonth = dateString.substr(5, 2);
-  strDay = dateString.substr(8, 2);
-  strHour = dateString.substr(11, 2);
-  strMinute = dateString.substr(14, 2);
+  unsigned int a = 0, b = 4, c = 5, d = 2, e = 8, f = 11, g = 14;
+  strYear = dateString.substr(a, b);
+  strMonth = dateString.substr(c, d);
+  strDay = dateString.substr(e, d);
+  strHour = dateString.substr(f, d);
+  strMinute = dateString.substr(g, d);
   stringstream reader;
   reader << strYear;
   reader >> year;

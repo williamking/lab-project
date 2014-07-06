@@ -38,7 +38,7 @@ bool Storage::readFromFile(const char *fpath) {
   }
   string reader;
   getline(in, reader);
-  int index = reader.size() - 2;
+  unsigned int index = reader.size() - 2;
   int num = 0, ten = 1;
   while ((reader[index] >= '0') && (reader[index] <= '9')) { 
     num = num + (reader[index] - '0') * ten;

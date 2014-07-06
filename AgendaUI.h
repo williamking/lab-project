@@ -16,7 +16,8 @@
 #include <unistd.h>
 
 #define SERVERPORT 8888
-#define MAXDATASIZE 100
+#define MAXDATASIZE 1000
+#define BACKLOG 10
 
 class AgendaUI {
  public:
@@ -48,9 +49,10 @@ class AgendaUI {
   std::string userPassword_;
   AgendaService agendaService_;
   int sockfd, client_fd;
-  char buf[MAXDATESIZE];
+  char buf[MAXDATASIZE];
   struct sockaddr_in my_addr;
   struct sockaddr_in remote_addr;
+  void sends(const char *);
 };
 
 #endif
